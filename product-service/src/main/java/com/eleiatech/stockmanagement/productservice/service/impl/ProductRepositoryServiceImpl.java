@@ -2,6 +2,7 @@ package com.eleiatech.stockmanagement.productservice.service.impl;
 
 import com.eleiatech.stockmanagement.productservice.enums.Language;
 import com.eleiatech.stockmanagement.productservice.exception.enums.FriendlyMessageCodes;
+import com.eleiatech.stockmanagement.productservice.exception.exceptions.ProductAlreadyDeletedException;
 import com.eleiatech.stockmanagement.productservice.exception.exceptions.ProductNotCreatedException;
 import com.eleiatech.stockmanagement.productservice.exception.exceptions.ProductNotFoundException;
 import com.eleiatech.stockmanagement.productservice.repository.entity.Product;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -78,6 +80,19 @@ public class ProductRepositoryServiceImpl implements IProductRepositoryService{
 
     @Override
     public Product deleteProduct(Language language, Long productId) {
-        return null;
+        log.debug("[{}][deletedProduct] -> request productId: {}", this.getClass().getSimpleName(), productId);
+        Product product;
+        try{
+            product = getProduct(language, productId);
+            product.setDeleted(true);
+            product.setProductUpdateDate(new Date());
+            Product productResponse = productRepository.save(product);
+            log.debug("[{}][deletedProduct] -> response: {}", this.getClass().getSimpleName(), productResponse);
+            return productResponse;
+
+        }catch (ProductNotFoundException productNotFoundException){
+            throw new ProductAlreadyDeletedException(language, FriendlyMessageCodes.PRODUCT_ALREADY_DELETED, "Product already deleted product id: " + productId);
+        }
+
     }
 }
