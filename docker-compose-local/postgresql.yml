@@ -7,6 +7,7 @@ services:
     image: postgres:14.10-alpine
     volumes:
       - /Users/eleiatech/data/postgresql:/var/lib/postgresql/data
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
     networks:
       - stock-management-network-backend
     expose:
