@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: localhost
+
+info:
+  component: Config Server
+
+---
+spring:
+  config:
+    activate:
+      on-profile: localhost
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/echowang66/SpringBootMicroservice/tree/c057aed028f22bdeb8879e6bb1e73f2e3546b2ac/stockmanagement-configs
+logging:
+  level:
+    root: debug
+server:
+  port: 8888
+
+---
+spring:
+  config:
+    activate:
+      on-profile: stage
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/echowang66/SpringBootMicroservice/tree/c057aed028f22bdeb8879e6bb1e73f2e3546b2ac/stockmanagement-configs
+logging:
+  level:
+    root: debug
+server:
+  port: 8888
